@@ -1,25 +1,25 @@
 # 项目自动、打包
 
-#赋予权限
-#chmod 777 auto_ipa.sh 
+# 赋予权限
+# chmod 777 auto_ipa.sh 
 
-#1、如果只需要导出ipa则只需要设置 PROJECT_TYPE 的值, 其它值不需要填写
-#2、如果你不需要提交到蒲公英 就将 UPLOADPGYER=flase 和 pgyerApiKey=""
-#3、如果需要添加蒲公英更新说明则在 脚本后面 添加  栗子： ./auth_ipa.sh 我是版本更新内容
-#4、导出的ipa 在你的桌面
+# 1、如果只需要导出ipa则只需要设置 PROJECT_TYPE 的值, 其它值不需要填写
+# 2、如果你不需要提交到蒲公英 就将 UPLOADPGYER=flase 和 pgyerApiKey=""
+# 3、如果需要添加蒲公英更新说明则在 脚本后面 添加  栗子： ./auth_ipa.sh 我是版本更新内容
+# 4、导出的ipa 在你的桌面
 
-#选择项目 xcodeproj or xcworkspace 这里是二选一 
+# 选择项目 xcodeproj or xcworkspace 这里是二选一 
 PROJECT_TYPE="xcworkspace"
-#是否需要上传到蒲公英
+# 是否需要上传到蒲公英
 UPLOADPGYER=true
-#蒲公英的key
-PgyerApiKey=1234567890
+# 蒲公英的key
+PgyerApiKey=123456789
 
 
-#--------------我是分割线-------------------
-#--------------我是分割线-------------------
+# --------------我是分割线-------------------
+# --------------我是分割线-------------------
 
-#项目的根目录路径
+# 项目的根目录路径
 PROJECT_PATH="$( cd "$( dirname "$0"  )" && pwd  )";
 
 # 项目target名字
@@ -39,10 +39,10 @@ function getFileName(){
 }
 getFileName
 
-#判断是否获取到当前目录含有 xcode的项目文件
+# 判断是否获取到当前目录含有 xcode的项目文件
 if [[ "${#TARGET_NAME}" -eq 0  ]]; then
-  echo "没有获取到项目名称"
-  exit;
+	echo "没有获取到项目名称"
+	exit;
 fi
 
 
@@ -50,7 +50,7 @@ fi
 # 打包环境 Release / Debug
 CONFIGURATION=Release
 
-#工程文件路径
+# 工程文件路径
 
 APP_PATH="${PROJECT_PATH}/${TARGET_NAME}.$PROJECT_TYPE"
 
@@ -85,9 +85,9 @@ xcodebuild -exportArchive -archivePath "${ARCHIVE_PATH}" -exportPath "${EXPORT_P
 
 
 
-#上传到蒲公英
+# 上传到蒲公英
 if [ $UPLOADPGYER = true ]; then
- #获取第一个参数
+ # 获取第一个参数
   varBuildUpdateDescription=$1
     
   # 上传蒲公英
