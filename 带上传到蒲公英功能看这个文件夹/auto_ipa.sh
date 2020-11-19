@@ -3,15 +3,17 @@
 #赋予权限
 #chmod 777 auto_ipa.sh 
 
-#如果只需要导出ipa则只需要设置 PROJECT_TYPE 的值, 其它值不需要填写
-#如果你不需要提交到蒲公英 就将 UPLOADPGYER=flase 和 pgyerApiKey=""
-#如果蒲公英需要更新说明则在 脚本后面 添加  栗子： ./auth_ipa.sh 我是版本更新内容
+#1、如果只需要导出ipa则只需要设置 PROJECT_TYPE 的值, 其它值不需要填写
+#2、如果你不需要提交到蒲公英 就将 UPLOADPGYER=flase 和 pgyerApiKey=""
+#3、如果需要添加蒲公英更新说明则在 脚本后面 添加  栗子： ./auth_ipa.sh 我是版本更新内容
+#4、导出的ipa 在你的桌面
 
 #选择项目 xcodeproj or xcworkspace 这里是二选一 
 PROJECT_TYPE="xcworkspace"
 #是否需要上传到蒲公英
 UPLOADPGYER=true
-gyerApiKey="12345678910"
+#蒲公英的key
+PgyerApiKey=1234567890
 
 
 #--------------我是分割线-------------------
@@ -39,8 +41,8 @@ getFileName
 
 #判断是否获取到当前目录含有 xcode的项目文件
 if [[ "${#TARGET_NAME}" -eq 0  ]]; then
-	echo "没有获取到项目名称"
-	exit;
+  echo "没有获取到项目名称"
+  exit;
 fi
 
 
@@ -57,7 +59,7 @@ xcodebuild clean -workspace "${APP_PATH}" -configuration "${CONFIGURATION}" -sch
 
 # 打包目录
 HOME_PATH=$(echo ${HOME})
-DESKTOP_PATH="#{HOME_PATH}/Desktop"
+DESKTOP_PATH="${HOME_PATH}/Desktop"
 
 # 时间戳
 CURRENT_TIME=$(date "+%Y-%m-%d %H-%M-%S")
