@@ -3,17 +3,21 @@
 # 赋予权限
 # chmod 777 auto_ipa.sh 
 
+# ps:脚本需要放在项目根目录, 同时需要 ExportOptions.plist 也放在项目根目录
 # 1、如果只需要导出ipa则只需要设置 PROJECT_TYPE 的值, 其它值不需要填写
-# 2、如果你不需要提交到蒲公英 就将 UPLOADPGYER=flase 和 pgyerApiKey=""
-# 3、如果需要添加蒲公英更新说明则在 脚本后面 添加  栗子： ./auth_ipa.sh 我是版本更新内容
-# 4、导出的ipa 在你的桌面
+# 2、如果TARGET_NAME 和 Display_Name 不一样则需要手动设置Display_Name（Display_Name 和项目里面设置的保持一样）, 如果是一样则忽略 Display_Name
+# 3、如果你不需要提交到蒲公英 就将 UPLOADPGYER=flase 和 pgyerApiKey=""
+# 4、如果需要添加蒲公英更新说明则在 脚本后面 添加  举个栗子： ./auth_ipa.sh 我是版本更新内容
+# 5、导出的ipa 在你的桌面
 
 # 选择项目 xcodeproj or xcworkspace 这里是二选一 
 PROJECT_TYPE="xcworkspace"
 # 是否需要上传到蒲公英
 UPLOADPGYER=true
 # 蒲公英的key
-PgyerApiKey=123456789
+PgyerApiKey=123456
+#Display_NAME
+DISPLAY_NAME=""
 
 
 # --------------我是分割线-------------------
@@ -67,10 +71,8 @@ CURRENT_TIME=$(date "+%Y-%m-%d %H-%M-%S")
 # 归档路径
 ARCHIVE_PATH="${DESKTOP_PATH}/${TARGET_NAME} ${CURRENT_TIME}/${TARGET_NAME}.xcarchive"
 
-
 # 导出路径
 EXPORT_PATH="${DESKTOP_PATH}/${TARGET_NAME} ${CURRENT_TIME}"
-
 
 # plist路径
 PLIST_PATH="${PROJECT_PATH}/ExportOptions.plist"
@@ -82,17 +84,23 @@ xcodebuild archive -workspace "${APP_PATH}" -scheme "${TARGET_NAME}" -configurat
 xcodebuild -exportArchive -archivePath "${ARCHIVE_PATH}" -exportPath "${EXPORT_PATH}" -exportOptionsPlist "${PLIST_PATH}"
 
 
-
-
-
 # 上传到蒲公英
 if [ $UPLOADPGYER = true ]; then
  # 获取第一个参数
   varBuildUpdateDescription=$1
     
-  # 上传蒲公英
-  IPAPATH="${EXPORT_PATH}/${TARGET_NAME}.ipa"
-        
+  
+  #如果有设置DISPLAY_NAME怎取DISPLAY_NAME ，否则默认取TARGET_NAME
+  IPAPATH=""
+  if [ -n "$DISPLAY_NAME" ] 
+    then
+    IPAPATH="${EXPORT_PATH}/${DISPLAY_NAME}.ipa"
+  else
+    IPAPATH="${EXPORT_PATH}/${TARGET_NAME}.ipa"
+  fi
+  echo $IPAPATH
+    
+  # 上传蒲公英  
   echo "~~~~~~~~~~~~~~~~上传ipa到蒲公英~~~~~~~~~~~~~~~~~~~"\
   RESULT=$(curl -F "file=@${IPAPATH}" -F "_api_key=${PgyerApiKey}" -F "buildUpdateDescription=${varBuildUpdateDescription}" https://www.pgyer.com/apiv2/app/upload)
   echo $RESULT
